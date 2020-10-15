@@ -11,7 +11,7 @@ func main() {
   client := &http.Client{}
   // async check all the things until they don't work no more
   go scraper.CheckBestBuy(client, false)
-  // go scraper.CheckNewegg(client)
+  go scraper.CheckNewegg(client)
   _ = client
   // gmailClient, err := email.GetGmailClient()
   // if err != nil {

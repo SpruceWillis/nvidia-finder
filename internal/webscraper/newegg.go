@@ -40,21 +40,23 @@ func CheckNewegg(client *http.Client){
       if status {
         log.Println(string(colorGreen), "Found in stock", card.Name, "at Newegg, url:", card.Url, string(colorReset))
         foundMatch = true
+      } else {
+        log.Println(card.Name, "not in stock at Newegg")
       }
     }
     if foundMatch {
       os.Exit(0)
     } else {
       log.Println("nothing in stock at Newegg")
+      util.RandomSleep(5, 10)
     }
-    util.RandomSleep(25, 30)
+    util.RandomSleep(35, 60)
   }
 }
 
 func checkCardStatus(client *http.Client, url string) (bool, error) {
   method := "GET"
   req, err := http.NewRequest(method, url, nil)
-  log.Println("checking")
   if err != nil {
     log.Println(err)
     return false, err

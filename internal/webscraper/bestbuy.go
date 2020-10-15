@@ -16,6 +16,8 @@ import (
   "github.com/sprucewillis/nvidia-finder/internal/util"
 )
 
+var bestBuySkus []string
+
 func CheckBestBuy(client *http.Client, findSkusFromWeb bool){
   colorGreen := "\033[32m"
   colorReset := "\033[0m"
@@ -48,12 +50,15 @@ func CheckBestBuy(client *http.Client, findSkusFromWeb bool){
 
 func getBestBuyStatus(client *http.Client, findSkusFromWeb bool) map[string]bool {
   var skus []string
-  if findSkusFromWeb {
+  if bestBuySkus != nil {
+    skus = util.ShuffleString(bestBuySkus)
+  } else if findSkusFromWeb {
     skus = getSkusFromWeb(client)
   } else {
     skus = getSkusFromFile()
   }
   fmt.Println("best buy skus:", skus)
+  bestBuySkus = skus
   return getSkuStatuses(skus, client)
 }
 
@@ -233,6 +238,7 @@ func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
     }
     statuses[sku] = inStockStatus
     log.Println("sku", sku, "in stock at best buy:", inStockStatus)
+    util.RandomSleep(5, 10)
   }
   return statuses
 }
