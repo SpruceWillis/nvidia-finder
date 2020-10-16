@@ -215,11 +215,11 @@ func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
 			req.Header.Add(k, v)
 		}
 		resp, err := client.Do(req)
-		defer resp.Body.Close()
 		if err != nil {
 			statuses[sku] = false
 			continue
 		}
+		defer resp.Body.Close()
 		inStockStatus := parseHtmlForStatus(sku, resp)
 		if err != nil {
 			statuses[sku] = false
