@@ -40,6 +40,7 @@ func CheckNewegg(client *http.Client) {
 			if status {
 				log.Println(string(colorGreen), "Found in stock", card.Name, "at Newegg, url:", card.Url, string(colorReset))
 				foundMatch = true
+				util.OpenUrl(card.Url)
 			} else {
 				log.Println(card.Name, "not in stock at Newegg")
 			}

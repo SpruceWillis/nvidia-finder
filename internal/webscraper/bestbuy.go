@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os/exec"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -18,6 +17,7 @@ import (
 
 var bestBuySkus []string
 
+// CheckBestBuy(*http.Client, bool) check best buy client
 func CheckBestBuy(client *http.Client, findSkusFromWeb bool) {
 
 	for {
@@ -178,9 +178,8 @@ func parseDocumentSku(document map[string]interface{}) (string, bool) {
 	typeMap, typeConversionOk := rawType.(map[string]interface{})
 	if typeExists && typeConversionOk && isSku(typeMap) {
 		return getSkuFromDocument(document), true
-	} else {
-		return "", false
 	}
+	return "", false
 }
 
 func isSku(typeMap map[string]interface{}) bool {
@@ -189,8 +188,8 @@ func isSku(typeMap map[string]interface{}) bool {
 }
 
 func getSkuFromDocument(document map[string]interface{}) string {
-	rawId := document["id"]
-	idMap := rawId.(map[string]interface{})
+	rawID := document["id"]
+	idMap := rawID.(map[string]interface{})
 	return idMap["value"].(string)
 }
 
@@ -231,11 +230,9 @@ func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
 			log.Println("sku", sku, "in stock at best buy:", inStockStatus)
 			url = fmt.Sprintf("https://www.bestbuy.com/site/searchpage.jsp?st=%v&_dyncharset=UTF-8&_dynSessConf=&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys", sku)
 			log.Println(string(colorGreen), "Found in stock best buy SKU at", url, string(colorReset))
-			cmd := exec.Command("open", url)
-			err = cmd.Start()
-			if err != nil {
-				log.Println(err)
-			}
+			util.OpenUrl(url)
+		} else {
+			log.Printf("sku %v not in stock at best buy", sku)
 		}
 		util.RandomSleep(5, 10)
 	}
