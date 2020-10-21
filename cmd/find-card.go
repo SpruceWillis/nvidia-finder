@@ -1,25 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
-	"github.com/sprucewillis/nvidia-finder/internal/email/auth"
+	scraper "github.com/sprucewillis/nvidia-finder/internal/webscraper"
 )
 
 func main() {
 	client := &http.Client{}
-	// async check all the things until they don't work no more
-	creds := auth.GetSmtpCreds()
-	plainAuth := creds.GetPlainAuth()
-	fmt.Println(plainAuth)
-	// go scraper.CheckBestBuy(client, false)
-	// go scraper.CheckNewegg(client)
-	_ = client
-	// gmailClient, err := email.GetGmailClient()
-	// if err != nil {
-	// log.Println("found client %v", gmailClient)
-	// }
+	// TODO send these results to a channel for message sending
+	go scraper.CheckBestBuy(client, false)
+	go scraper.CheckNewegg(client)
 	for {
 		// keep program alive
 	}
