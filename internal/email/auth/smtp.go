@@ -27,7 +27,7 @@ func (creds *Credentials) GetPlainAuth() *smtp.Auth {
 	return &auth
 }
 
-// GetUrl return the Host:Port from these credentials
+// GetURL return the Host:Port from these credentials
 func (creds *Credentials) GetURL() string {
 	return fmt.Sprint(creds.Hostname, ":", creds.Port)
 }

@@ -33,14 +33,14 @@ func CheckNewegg(client *http.Client) {
 	for {
 		foundMatch := false
 		for _, card := range cards {
-			status, err := checkCardStatus(client, card.Url)
+			status, err := checkCardStatus(client, card.URL)
 			if err != nil {
 				log.Println("error: unable to parse data for newegg card", card.Name)
 			}
 			if status {
-				log.Println(string(colorGreen), "Found in stock", card.Name, "at Newegg, url:", card.Url, string(colorReset))
+				log.Println(string(colorGreen), "Found in stock", card.Name, "at Newegg, url:", card.URL, string(colorReset))
 				foundMatch = true
-				util.OpenUrl(card.Url)
+				util.OpenURL(card.URL)
 			} else {
 				log.Println(card.Name, "not in stock at Newegg")
 			}
