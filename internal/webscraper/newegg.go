@@ -25,7 +25,7 @@ func init() {
 }
 
 // CheckNewegg check newegg stock by individual card pages
-func CheckNewegg(client *http.Client) {
+func CheckNewegg(client *http.Client, c chan Card) {
 	colorGreen := "\033[32m"
 	colorReset := "\033[0m"
 	// TODO: randomize time
@@ -39,8 +39,9 @@ func CheckNewegg(client *http.Client) {
 			}
 			if status {
 				log.Println(string(colorGreen), "Found in stock", card.Name, "at Newegg, url:", card.URL, string(colorReset))
+				card.Site = "newegg"
+				c <- card
 				foundMatch = true
-				util.OpenURL(card.URL)
 			} else {
 				log.Println(card.Name, "not in stock at Newegg")
 			}

@@ -2,17 +2,19 @@ package main
 
 /*
 import (
+	"log"
+
 	"github.com/sprucewillis/nvidia-finder/internal/email"
-	"github.com/sprucewillis/nvidia-finder/internal/email/auth"
+	scraper "github.com/sprucewillis/nvidia-finder/internal/webscraper"
 )
 
 func main() {
-	creds := auth.GetSmtpCreds()
-	plainAuth := creds.GetPlainAuth()
-	from := creds.Username
-	emailDomain := "@gmail.com"
-	// TODO store the recipient list somewhere else
-	to := []string{(creds.Username + emailDomain)}
-	email.Send("test", creds.GetURL(), from, to, plainAuth)
+	c := make(chan scraper.Card)
+	go email.SetupAlerts(c)
+	card := scraper.Card{"https://youtu.be/eUuYgmWq9F4", "Shibe Card", "Doge"}
+	log.Println("card", card)
+	c <- card
+	for {
+	}
 }
 */

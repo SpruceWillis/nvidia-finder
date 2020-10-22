@@ -17,15 +17,18 @@ import (
 
 var bestBuySkus []string
 
-// CheckBestBuy(*http.Client, bool) check best buy client
-func CheckBestBuy(client *http.Client, findSkusFromWeb bool) {
+// CheckBestBuy(*http.Client, bool, chan Card) check best buy client and send notifications to email channel
+func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Card) {
 
 	for {
 		// checkInterval := randomNumber * time.Second
 		bestBuyStatuses := getBestBuyStatus(client, findSkusFromWeb)
 		foundMatch := false
-		for _, v := range bestBuyStatuses {
-			if v {
+		for sku, inStock := range bestBuyStatuses {
+			if inStock {
+				url := getProductURL(sku)
+				card := Card{url, sku, "Best Buy"}
+				c <- card
 				foundMatch = true
 			}
 		}
@@ -37,6 +40,7 @@ func CheckBestBuy(client *http.Client, findSkusFromWeb bool) {
 	}
 }
 
+// map of SKU to if it is in status
 func getBestBuyStatus(client *http.Client, findSkusFromWeb bool) map[string]bool {
 	var skus []string
 	if bestBuySkus != nil {
@@ -228,7 +232,7 @@ func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
 		statuses[sku] = inStockStatus
 		if inStockStatus {
 			log.Println("sku", sku, "in stock at best buy:", inStockStatus)
-			url = fmt.Sprintf("https://www.bestbuy.com/site/searchpage.jsp?st=%v&_dyncharset=UTF-8&_dynSessConf=&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys", sku)
+			url = getProductURL(sku)
 			log.Println(string(colorGreen), "Found in stock best buy SKU at", url, string(colorReset))
 			util.OpenURL(url)
 		} else {
@@ -237,6 +241,10 @@ func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
 		util.RandomSleep(5, 10)
 	}
 	return statuses
+}
+
+func getProductURL(sku string) string {
+	return fmt.Sprintf("https://www.bestbuy.com/site/searchpage.jsp?st=%v&_dyncharset=UTF-8&_dynSessConf=&id=pcat17071&type=page&sc=Global&cp=1&nrp=&sp=&qp=&list=n&af=true&iht=y&usc=All+Categories&ks=960&keys=keys", sku)
 }
 
 /**

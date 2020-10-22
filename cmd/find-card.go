@@ -3,14 +3,16 @@ package main
 import (
 	"net/http"
 
+	"github.com/sprucewillis/nvidia-finder/internal/email"
 	scraper "github.com/sprucewillis/nvidia-finder/internal/webscraper"
 )
 
 func main() {
 	client := &http.Client{}
-	// TODO send these results to a channel for message sending
-	go scraper.CheckBestBuy(client, false)
-	go scraper.CheckNewegg(client)
+	emailChannel := make(chan scraper.Card)
+	go email.SetupAlerts(emailChannel)
+	go scraper.CheckBestBuy(client, false, emailChannel)
+	go scraper.CheckNewegg(client, emailChannel)
 	for {
 		// keep program alive
 	}
