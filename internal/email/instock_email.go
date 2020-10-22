@@ -24,6 +24,7 @@ func SendInStockEmail(site, productURL, smtpURL, from string, to []string, auth 
 		log.Println("unable to send email", err)
 		return err
 	}
+	log.Println("instock email(s) sent to indicated recipients")
 	return nil
 }
 
