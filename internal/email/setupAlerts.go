@@ -22,7 +22,6 @@ func SetupAlerts(c chan scraper.Card) error {
 		err := SendInStockEmail(cardInStock.Site, cardInStock.URL, creds.GetURL(), from, to, plainAuth)
 		if err != nil {
 			fmt.Println("WARN: unable to send email", err)
-			return err
 		}
 	}
 	return nil
