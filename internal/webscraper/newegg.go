@@ -28,12 +28,13 @@ func init() {
 func CheckNewegg(client *http.Client, c chan Card) {
 	colorGreen := "\033[32m"
 	colorReset := "\033[0m"
+	numRetries := 1
 	// TODO: randomize time
 	log.Printf("found %v cards to check at newegg", len(cards))
 	for {
 		foundMatch := false
 		for _, card := range cards {
-			status, err := checkCardStatus(client, card.URL)
+			status, err := checkCardStatusWithRetries(client, card.URL, numRetries)
 			if err != nil {
 				log.Println("error: unable to parse data for newegg card", card.Name)
 			}
@@ -51,6 +52,24 @@ func CheckNewegg(client *http.Client, c chan Card) {
 			log.Println("nothing in stock at Newegg")
 		}
 		util.RandomSleep(35, 60)
+	}
+}
+
+// retry so we can reduce the number of false positives
+func checkCardStatusWithRetries(client *http.Client, url string, numRetries int) (bool, error) {
+	status, err := checkCardStatus(client, url)
+	if err != nil {
+		return false, err
+	}
+	if status {
+		if numRetries == 0 {
+			return status, nil
+		} else {
+			log.Println("card at", url, "possibly in stock at newegg, retrying to confirm")
+			return checkCardStatusWithRetries(client, url, numRetries - 1)
+		}
+	} else {
+		return status, nil
 	}
 }
 
