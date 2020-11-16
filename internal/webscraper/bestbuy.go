@@ -17,9 +17,8 @@ import (
 
 var bestBuySkus []string
 
-// CheckBestBuy(*http.Client, bool, chan Card) check best buy client and send notifications to email channel
+// CheckBestBuy(*http.Client, bool, chan Item) check best buy client and send notifications to email channel
 func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Item) {
-
 	for {
 		// checkInterval := randomNumber * time.Second
 		bestBuyStatuses := getBestBuyStatus(client, findSkusFromWeb)
@@ -27,8 +26,8 @@ func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Item) {
 		for sku, inStock := range bestBuyStatuses {
 			if inStock {
 				url := getProductURL(sku)
-				card := Item{url, sku, "Best Buy"}
-				c <- card
+				item := Item{url, sku, "Best Buy", 0}
+				c <- item
 				foundMatch = true
 			}
 		}
@@ -125,11 +124,10 @@ func findDocumentSection(body []byte) (map[string]interface{}, error) {
 		case map[string]interface{}:
 			if k == "documents" {
 				return vv, nil
-			} else {
-				recurseResult, err := findDocumentSectionMap(vv)
-				if err == nil {
-					return recurseResult, nil
-				}
+			}
+			recurseResult, err := findDocumentSectionMap(vv)
+			if err == nil {
+				return recurseResult, nil
 			}
 		case []interface{}:
 			// TODO iterate over the map elements and see if they contain documents, otherwise carry on
@@ -146,11 +144,10 @@ func findDocumentSectionMap(section map[string]interface{}) (map[string]interfac
 		case map[string]interface{}:
 			if k == "documents" {
 				return vv, nil
-			} else {
-				recurseResult, err := findDocumentSectionMap(vv)
-				if err == nil {
-					return recurseResult, nil
-				}
+			}
+			recurseResult, err := findDocumentSectionMap(vv)
+			if err == nil {
+				return recurseResult, nil
 			}
 		case []interface{}:
 			// TODO iterate over the entries and see if the documents section is there
@@ -224,7 +221,7 @@ func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
 			continue
 		}
 		defer resp.Body.Close()
-		inStockStatus := parseHtmlForStatus(sku, resp)
+		inStockStatus := parseHTMLForStatus(sku, resp)
 		if err != nil {
 			statuses[sku] = false
 			continue
@@ -259,7 +256,7 @@ func getProductURL(sku string) string {
 		</div>
     Therefore I think we want to open up the first div, find the second script tag, and parse that
 */
-func parseHtmlForStatus(sku string, resp *http.Response) bool {
+func parseHTMLForStatus(sku string, resp *http.Response) bool {
 	doc, err := html.Parse(resp.Body)
 	if err != nil || resp.StatusCode != 200 {
 		log.Printf("unable to parse HTML for status code, assuming  %v out of stock", sku)
