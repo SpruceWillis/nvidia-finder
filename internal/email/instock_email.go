@@ -9,9 +9,9 @@ import (
 
 func inStockMessage(from, site, url string, to string) []byte {
 	message := fmt.Sprintf("To: %v\r\n", to) +
-		"Subject: GPU in stock\r\n" +
+		"Subject: Item in stock\r\n" +
 		"\r\n" +
-		fmt.Sprintf("GPU in stock at %v, url: %v\r\n", site, url)
+		fmt.Sprintf("Item in stock at %v, url: %v\r\n", site, url)
 	return []byte(message)
 }
 
