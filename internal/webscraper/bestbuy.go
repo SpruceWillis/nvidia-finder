@@ -18,7 +18,7 @@ import (
 var bestBuySkus []string
 
 // CheckBestBuy(*http.Client, bool, chan Card) check best buy client and send notifications to email channel
-func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Card) {
+func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Item) {
 
 	for {
 		// checkInterval := randomNumber * time.Second
@@ -27,7 +27,7 @@ func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Card) {
 		for sku, inStock := range bestBuyStatuses {
 			if inStock {
 				url := getProductURL(sku)
-				card := Card{url, sku, "Best Buy"}
+				card := Item{url, sku, "Best Buy"}
 				c <- card
 				foundMatch = true
 			}

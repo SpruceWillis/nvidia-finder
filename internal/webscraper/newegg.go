@@ -11,30 +11,30 @@ import (
 	"github.com/sprucewillis/nvidia-finder/internal/util"
 )
 
-var cards []Card
+var items []Item
 
 func init() {
 	rawConfig, err := ioutil.ReadFile("./src/github.com/sprucewillis/nvidia-finder/internal/webscraper/newegg_config.json")
 	if err != nil {
 		log.Println("error: unable to read Newegg card config file")
 	}
-	err = json.Unmarshal(rawConfig, &cards)
+	err = json.Unmarshal(rawConfig, &items)
 	if err != nil {
 		log.Println("error: unable to parse Newegg config from JSON")
 	}
 }
 
 // CheckNewegg check newegg stock by individual card pages
-func CheckNewegg(client *http.Client, c chan Card) {
+func CheckNewegg(client *http.Client, c chan Item) {
 	colorGreen := "\033[32m"
 	colorReset := "\033[0m"
 	numRetries := 1
 	// TODO: randomize time
-	log.Printf("found %v cards to check at newegg", len(cards))
+	log.Printf("found %v cards to check at newegg", len(items))
 	for {
 		foundMatch := false
-		for _, card := range cards {
-			status, err := checkCardStatusWithRetries(client, card.URL, numRetries)
+		for _, card := range items {
+			status, err := checkItemStatusWithRetries(client, card.URL, numRetries)
 			if err != nil {
 				log.Println("error: unable to parse data for newegg card", card.Name)
 			}
@@ -56,8 +56,8 @@ func CheckNewegg(client *http.Client, c chan Card) {
 }
 
 // retry so we can reduce the number of false positives
-func checkCardStatusWithRetries(client *http.Client, url string, numRetries int) (bool, error) {
-	status, err := checkCardStatus(client, url)
+func checkItemStatusWithRetries(client *http.Client, url string, numRetries int) (bool, error) {
+	status, err := checkItemStatus(client, url)
 	if err != nil {
 		return false, err
 	}
@@ -66,14 +66,14 @@ func checkCardStatusWithRetries(client *http.Client, url string, numRetries int)
 			return status, nil
 		} else {
 			log.Println("card at", url, "possibly in stock at newegg, retrying to confirm")
-			return checkCardStatusWithRetries(client, url, numRetries - 1)
+			return checkItemStatusWithRetries(client, url, numRetries-1)
 		}
 	} else {
 		return status, nil
 	}
 }
 
-func checkCardStatus(client *http.Client, url string) (bool, error) {
+func checkItemStatus(client *http.Client, url string) (bool, error) {
 	method := "GET"
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
@@ -90,10 +90,10 @@ func checkCardStatus(client *http.Client, url string) (bool, error) {
 		log.Println(err)
 		return false, err
 	}
-	return parseCardStatus(resp, url), nil
+	return parseItemStatus(resp, url), nil
 }
 
-func parseCardStatus(resp *http.Response, url string) bool {
+func parseItemStatus(resp *http.Response, url string) bool {
 	log.Println("checking", url)
 	doc, err := html.Parse(resp.Body)
 	if err != nil {

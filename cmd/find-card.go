@@ -9,7 +9,7 @@ import (
 
 func main() {
 	client := &http.Client{}
-	emailChannel := make(chan scraper.Card)
+	emailChannel := make(chan scraper.Item)
 	go email.SetupAlerts(emailChannel)
 	go scraper.CheckBestBuy(client, false, emailChannel)
 	go scraper.CheckNewegg(client, emailChannel)
