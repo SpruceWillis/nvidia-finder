@@ -7,11 +7,11 @@ import (
 	"os"
 
 	"github.com/sprucewillis/nvidia-finder/internal/email/auth"
-	scraper "github.com/sprucewillis/nvidia-finder/internal/webscraper"
+	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
 // SetupAlerts read email configuration and send email alerts to the folks it is configured for
-func SetupAlerts(c chan scraper.Item) error {
+func SetupAlerts(c chan inventory.Item) error {
 	// TODO do the auth stuff for the email, exit
 	creds := auth.GetSmtpCreds()
 	plainAuth := creds.GetPlainAuth()

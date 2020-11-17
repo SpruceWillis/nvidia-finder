@@ -13,12 +13,13 @@ import (
 	"golang.org/x/net/html"
 
 	"github.com/sprucewillis/nvidia-finder/internal/util"
+	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
-var bestBuySkus []string
+var bestBuyItems []inventory.Item
 
 // CheckBestBuy(*http.Client, bool, chan Item) check best buy client and send notifications to email channel
-func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Item) {
+func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan inventory.Item) {
 	for {
 		// checkInterval := randomNumber * time.Second
 		bestBuyStatuses := getBestBuyStatus(client, findSkusFromWeb)
@@ -26,7 +27,7 @@ func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Item) {
 		for sku, inStock := range bestBuyStatuses {
 			if inStock {
 				url := getProductURL(sku)
-				item := Item{url, sku, "Best Buy", 0}
+				item := inventory.Item{url, sku, "Best Buy", 0, sku}
 				c <- item
 				foundMatch = true
 			}
@@ -41,38 +42,37 @@ func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan Item) {
 
 // map of SKU to if it is in status
 func getBestBuyStatus(client *http.Client, findSkusFromWeb bool) map[string]bool {
-	var skus []string
-	if bestBuySkus != nil {
-		skus = util.ShuffleString(bestBuySkus)
+	var items []inventory.Item
+	if bestBuyItems != nil {
+		items = util.ShuffleItems(bestBuyItems)
 	} else if findSkusFromWeb {
-		skus = getSkusFromWeb(client)
+		items = getSkusFromWeb(client)
 	} else {
-		skus = getSkusFromFile()
+		items = getItemsFromFile()
 	}
-	fmt.Println("best buy skus:", skus)
-	bestBuySkus = skus
-	return getSkuStatuses(skus, client)
+	bestBuyItems = items
+	return getItemStatuses(items, client)
 }
 
-func getSkusFromFile() []string {
-	var skus []string
+func getItemsFromFile() []inventory.Item {
+	var items []inventory.Item
 	rawConfig, err := ioutil.ReadFile("./src/github.com/sprucewillis/nvidia-finder/internal/webscraper/bestbuy_config.json")
 	if err != nil {
 		log.Println("error: unable to read Best Buy card config file", err)
 		return nil
 	}
-	err = json.Unmarshal(rawConfig, &skus)
+	err = json.Unmarshal(rawConfig, &items)
 	if err != nil {
 		log.Println("error: unable to parse Best Buy config from file", err)
 		return nil
 	}
-	return skus
+	return items
 }
 
 // curl 'https://www.bestbuy.com/api/tcfb/model.json?paths=%5B%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%5B%22alternativeDataSetPresent%22%2C%22positionToSlotCarousel%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22redirect%22%2C%7B%22from%22%3A0%2C%22to%22%3A5%7D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22request_info%22%2C%22query%22%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22sponsoredProducts%22%2C%5B%22onLoadBeacon%22%2C%22uuid%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22suggestQueryInfo%22%2C%22correctedQuery%22%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22documents%22%2C%7B%22from%22%3A0%2C%22to%22%3A24%7D%2C%5B%22id%22%2C%22onClickBeacon%22%2C%22onViewBeacon%22%2C%22sponsoredproduct%22%2C%22type%22%2C%22variationid%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22sortOptions%22%2C%7B%22from%22%3A0%2C%22to%22%3A25%7D%2C%5B%22displayName%22%2C%22value%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22sponsoredProducts%22%2C%22appliedAds%22%2C%22all%22%5D%5D&method=get' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Referer: https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203080' -H 'DNT: 1' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' -H 'TE: Trailers'
 
 // return a slice containing the SKUs that are in stock for Best Buy
-func getSkusFromWeb(client *http.Client) []string {
+func getSkusFromWeb(client *http.Client) []inventory.Item {
 	url := "https://www.bestbuy.com/api/tcfb/model.json?paths=%5B%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%5B%22alternativeDataSetPresent%22%2C%22positionToSlotCarousel%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22redirect%22%2C%7B%22from%22%3A0%2C%22to%22%3A5%7D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22request_info%22%2C%22query%22%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22sponsoredProducts%22%2C%5B%22onLoadBeacon%22%2C%22uuid%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22suggestQueryInfo%22%2C%22correctedQuery%22%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22documents%22%2C%7B%22from%22%3A0%2C%22to%22%3A24%7D%2C%5B%22id%22%2C%22onClickBeacon%22%2C%22onViewBeacon%22%2C%22sponsoredproduct%22%2C%22type%22%2C%22variationid%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22sortOptions%22%2C%7B%22from%22%3A0%2C%22to%22%3A25%7D%2C%5B%22displayName%22%2C%22value%22%5D%5D%2C%5B%22shop%22%2C%22ssic%22%2C%22optional%22%2C%22requestTypes%22%2C%22search%22%2C%22queries%22%2C%22categoryid%2524abcat0507002%22%2C%22numberOfRows%22%2C24%2C%22pageNumber%22%2C1%2C%22facets%22%2C%22gpusv_facet%3DNVIDIA%2520GeForce%2520RTX%25203080%22%2C%22options%22%2C%22autoFacet%3Dtrue%26availableStoresList%3D102%26browsedCategory%3Dabcat0507002%26enableSponsoredProduct%3Dfalse%26fieldList%3Dskuid%2Cid%2Ctype%26inventoryType%3Dstorepickup%26preferredStore%3D102%26rdp%3Dl%26searchTest2%3Dbestselling_bigquery%26searchTest3%3Dsearchmetric_bigquery%26sort%3DBest-Selling%22%2C%22sponsoredProducts%22%2C%22appliedAds%22%2C%22all%22%5D%5D&method=get"
 	method := "GET"
 	req, err := http.NewRequest(method, url, nil)
@@ -99,7 +99,12 @@ func getSkusFromWeb(client *http.Client) []string {
 		log.Println(err)
 		return nil
 	}
-	return parseDocumentsForSkus(documentSection)
+	skus := parseDocumentsForSkus(documentSection)
+	var items []inventory.Item
+	for i, sku := range skus {
+		items[i] = inventory.Item{"", "", "", 0, sku}
+	}
+	return items
 }
 
 func bestBuyHeaders() map[string]string {
@@ -200,12 +205,13 @@ func getSkuFromDocument(document map[string]interface{}) string {
 // -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' \
 // --compressed -H 'DNT: 1' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache'
 // TODO return a map of the SKUs to booleans
-func getSkuStatuses(skus []string, client *http.Client) map[string]bool {
+func getItemStatuses(items []inventory.Item, client *http.Client) map[string]bool {
 	colorGreen := "\033[32m"
 	colorReset := "\033[0m"
 	var statuses = map[string]bool{}
 	method := "GET"
-	for _, sku := range skus { // TODO refactor to use goroutines for parallel execution
+	for _, item := range items { // TODO refactor to use goroutines for parallel execution
+		sku := item.Sku
 		url := fmt.Sprintf("https://www.bestbuy.com/site/canopy/component/fulfillment/add-to-cart-button/v1?skuId=%v", sku)
 		req, err := http.NewRequest(method, url, nil)
 		if err != nil {

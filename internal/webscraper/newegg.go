@@ -9,9 +9,10 @@ import (
 	"golang.org/x/net/html"
 
 	"github.com/sprucewillis/nvidia-finder/internal/util"
+	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
-var items []Item
+var items []inventory.Item
 
 func init() {
 	rawConfig, err := ioutil.ReadFile("./src/github.com/sprucewillis/nvidia-finder/internal/webscraper/newegg_config.json")
@@ -25,7 +26,7 @@ func init() {
 }
 
 // CheckNewegg check newegg stock by individual card pages
-func CheckNewegg(client *http.Client, c chan Item) {
+func CheckNewegg(client *http.Client, c chan inventory.Item) {
 	colorGreen := "\033[32m"
 	colorReset := "\033[0m"
 	numRetries := 1
