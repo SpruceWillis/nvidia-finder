@@ -19,9 +19,11 @@ func SetupAlerts(c chan inventory.Item) error {
 	to := GetEmailRecipients()
 	log.Println("email recipients:", recipientCSV(to))
 	for itemInStock := range c {
-		err := SendInStockEmail(itemInStock.Site, itemInStock.URL, creds.GetURL(), from, to, plainAuth)
-		if err != nil {
-			fmt.Println("WARN: unable to send email", err)
+		if len(to) > 0 {
+			err := SendInStockEmail(itemInStock.Site, itemInStock.URL, creds.GetURL(), from, to, plainAuth)
+			if err != nil {
+				fmt.Println("WARN: unable to send email", err)
+			}
 		}
 	}
 	return nil
