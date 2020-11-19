@@ -47,12 +47,12 @@ func CheckNewegg(client *http.Client, c chan inventory.Item) {
 			} else {
 				log.Println(card.Name, "not in stock at Newegg")
 			}
-			util.RandomSleep(5, 10)
+			util.RandomSleep(2, 5)
 		}
 		if !foundMatch {
 			log.Println("nothing in stock at Newegg")
 		}
-		util.RandomSleep(35, 60)
+		util.RandomSleep(10, 20)
 	}
 }
 

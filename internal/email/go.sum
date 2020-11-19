@@ -111,10 +111,13 @@ github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/sprucewillis/nvidia-finder v0.0.0-20201116054742-a92e0a79f6f3 h1:ZRcqnP00OM62DGX+kd9BBnwXiu4QzfmSTR6ml6X/dLs=
 github.com/sprucewillis/nvidia-finder v0.0.0-20201116054742-a92e0a79f6f3/go.mod h1:mIShaEYIvqNz2pbz43XZ95rSC3yL/3Z89U066fZpHIs=
+github.com/sprucewillis/nvidia-finder v0.0.0-20201118170018-5901fcd3561a h1:gGx7XoccWA74sbaUZD9YkzLx9CvpnakWYA/2mM51mnI=
 github.com/sprucewillis/nvidia-finder/internal/email/auth v0.0.0-20201107041430-150178eacb22 h1:7MM3PaLTDEoDHlLp9F7NZXhqGNZlCZuIeXHkfcCQrZQ=
 github.com/sprucewillis/nvidia-finder/internal/email/auth v0.0.0-20201107041430-150178eacb22/go.mod h1:HZVwRPPhZegxwArFCAfE3DyHxO8A40qXGr9OvJv+gJ8=
 github.com/sprucewillis/nvidia-finder/internal/util v0.0.0-20201116054742-a92e0a79f6f3 h1:qrIYvhJZPUztrFLckSR+IOpjn68R4mewe7rQ+DTagnI=
 github.com/sprucewillis/nvidia-finder/internal/util v0.0.0-20201116054742-a92e0a79f6f3/go.mod h1:scIpwH2s68nr6cnZzH9qjNFcegDC21QlvAxGlUyi+0g=
+github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory v0.0.0-20201118170018-5901fcd3561a h1:W1U+85BtNJ0ksqBaVnmPXaG33zCEutqB6sE7wFJrzJ4=
+github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory v0.0.0-20201118170018-5901fcd3561a/go.mod h1:SJAXUXe/qepKYb50HF8DY/KL5NXtpnX/rs1r5/zKktg=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
