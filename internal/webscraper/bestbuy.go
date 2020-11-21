@@ -18,30 +18,18 @@ import (
 
 var bestBuyItems []inventory.Item
 
-// CheckBestBuy(*http.Client, bool, chan Item) check best buy client and send notifications to email channel
+// CheckBestBuy(*http.Client, bool, chan inventory.Item) check best buy client and send notifications to email channel
 func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan inventory.Item) {
 	for {
-		// checkInterval := randomNumber * time.Second
-		bestBuyStatuses := getBestBuyStatus(client, findSkusFromWeb)
-		foundMatch := false
-		for sku, inStock := range bestBuyStatuses {
-			if inStock {
-				url := getProductURL(sku)
-				item := inventory.Item{url, sku, "Best Buy", 0, sku}
-				c <- item
-				foundMatch = true
-			}
-		}
-		if !foundMatch {
-			log.Println("nothing in stock at Best Buy")
-		}
-		// try not to get caught by the bot police
+		checkBestBuyStatuses(client, findSkusFromWeb, c)
 		util.RandomSleep(15, 20)
 	}
 }
 
 // map of SKU to if it is in status
-func getBestBuyStatus(client *http.Client, findSkusFromWeb bool) map[string]bool {
+func checkBestBuyStatuses(client *http.Client, findSkusFromWeb bool, c chan inventory.Item) {
+	colorGreen := "\033[32m"
+	colorReset := "\033[0m"
 	var items []inventory.Item
 	if bestBuyItems != nil {
 		items = util.ShuffleItems(bestBuyItems)
@@ -51,7 +39,19 @@ func getBestBuyStatus(client *http.Client, findSkusFromWeb bool) map[string]bool
 		items = getItemsFromFile()
 	}
 	bestBuyItems = items
-	return getItemStatuses(items, client)
+	for _, item := range items {
+		itemInStock := getItemStatus(item, client)
+		if itemInStock {
+			if item.URL == "" {
+				item.URL = getProductURL(item.Sku)
+			}
+			c <- item
+			log.Println(string(colorGreen), "Found in stock best buy", item.Sku, "at", item.URL, string(colorReset))
+		} else {
+			log.Printf("sku %v not in stock at best buy", item.Sku)
+		}
+	}
+
 }
 
 func getItemsFromFile() []inventory.Item {
@@ -102,7 +102,7 @@ func getSkusFromWeb(client *http.Client) []inventory.Item {
 	skus := parseDocumentsForSkus(documentSection)
 	var items []inventory.Item
 	for i, sku := range skus {
-		items[i] = inventory.Item{"", "", "", 0, sku}
+		items[i] = inventory.Item{URL: "", Name: "", Site: "Best Buy", PriceLimit: 0.0, Sku: sku}
 	}
 	return items
 }
@@ -205,45 +205,27 @@ func getSkuFromDocument(document map[string]interface{}) string {
 // -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' \
 // --compressed -H 'DNT: 1' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache'
 // TODO return a map of the SKUs to booleans
-func getItemStatuses(items []inventory.Item, client *http.Client) map[string]bool {
-	colorGreen := "\033[32m"
-	colorReset := "\033[0m"
-	var statuses = map[string]bool{}
+func getItemStatus(item inventory.Item, client *http.Client) bool {
 	method := "GET"
-	for _, item := range items { // TODO refactor to use goroutines for parallel execution
-		sku := item.Sku
-		url := fmt.Sprintf("https://www.bestbuy.com/site/canopy/component/fulfillment/add-to-cart-button/v1?skuId=%v", sku)
-		req, err := http.NewRequest(method, url, nil)
-		if err != nil {
-			statuses[sku] = false
-			continue
-		}
-		for k, v := range bestBuyHeaders() {
-			req.Header.Add(k, v)
-		}
-		resp, err := client.Do(req)
-		if err != nil {
-			statuses[sku] = false
-			continue
-		}
-		defer resp.Body.Close()
-		inStockStatus := parseHTMLForStatus(sku, resp)
-		if err != nil {
-			statuses[sku] = false
-			continue
-		}
-		statuses[sku] = inStockStatus
-		if inStockStatus {
-			log.Println("sku", sku, "in stock at best buy:", inStockStatus)
-			url = getProductURL(sku)
-			log.Println(string(colorGreen), "Found in stock best buy SKU at", url, string(colorReset))
-			util.OpenURL(url)
-		} else {
-			log.Printf("sku %v not in stock at best buy", sku)
-		}
-		util.RandomSleep(5, 10)
+	sku := item.Sku
+	url := fmt.Sprintf("https://www.bestbuy.com/site/canopy/component/fulfillment/add-to-cart-button/v1?skuId=%v", sku)
+	req, err := http.NewRequest(method, url, nil)
+	if err != nil {
+		return false
 	}
-	return statuses
+	for k, v := range bestBuyHeaders() {
+		req.Header.Add(k, v)
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+	inStockStatus := parseHTMLForStatus(sku, resp)
+	if err != nil {
+		return false
+	}
+	return inStockStatus
 }
 
 func getProductURL(sku string) string {
