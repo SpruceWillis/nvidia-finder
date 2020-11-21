@@ -95,7 +95,6 @@ func checkItemStatus(client *http.Client, url string) (bool, error) {
 }
 
 func parseItemStatus(resp *http.Response, url string) bool {
-	log.Println("checking", url)
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
 		log.Println("WARN: unable to parse HTML body of ", url)
