@@ -58,5 +58,17 @@
     {
       "url": "https://www.newegg.com/asus-geforce-rtx-3070-rog-strix-rtx3070-o8g-gaming/p/N82E16814126458",
       "name": "ASUS ROG Strix GeForce RTX 3070 DirectX 12 ROG-STRIX-RTX3070-O8G-GAMING 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "name": "MSI GeForce RTX 3070 DirectX 12 RTX 3070 VENTUS 2X OC 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card",
+      "url": "https://www.newegg.com/msi-geforce-rtx-3070-rtx-3070-ventus-2x-oc/p/N82E16814137602"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3080-rog-strix-rtx3080-10g-gaming/p/N82E16814126469?Item=N82E16814126469",
+      "name": "ASUS ROG Strix GeForce RTX 3080 DirectX 12 ROG-STRIX-RTX3080-10G-GAMING 10GB 320-Bit GDDR6X PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3070-ko-rtx3070-o8g-gamin/p/N82E16814126466?Description=rtx%203070&cm_re=rtx_3070-_-14-126-466-_-Product&",
+      "name": "ASUS GeForce RTX 3070 KO-RTX3070-O8G-GAMING 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card"
     }
   ]

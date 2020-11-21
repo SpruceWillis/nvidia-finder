@@ -54,5 +54,33 @@
   {
     "sku": "6440913",
     "name": "MSI - Radeon RX 6800 XT 16G - 16GB GDDR6 - PCI Express 4.0 - Graphics Card Black - Black"
+  },
+  {
+    "sku": "6429442",
+    "name": "NVIDIA GeForce RTX 3070 8GB GDDR6 PCI Express 4.0 Graphics Card - Dark Platinum and Black"
+  },
+  {
+    "sku": "6437912",
+    "name": "GIGABYTE - GeForce RTX 3070 8G GDDR6 PCI Express 4.0 Graphics Card Black"
+  },
+  {
+    "sku": "6439128",
+    "name": "ASUS - TUF-RTX3070 8GB GDDR6 PCI Express 4.0 Graphics Card - Black"
+  },
+  {
+    "name": "MSI - GeForce RTX 3070 VENTUS 3X OC BV - 8GB GDDR6 - PCI Express 4.0 - Graphics Card Black",
+    "sku": "6438278"
+  },
+  {
+    "sku": "6439300",
+    "name": "EVGA - GeForce RTX 3070 XC3 BLACK GAMING 8GB GDDR6X PCI Express 4.0 Graphics Card"
+  },
+  {
+    "sku": "6437909",
+    "name": "GIGABYTE - GeForce RTX 3070 8G GDDR6 PCI Express 4.0 Graphics Card Black"
+  },
+  {
+    "sku": "6439299",
+    "name": "EVGA - GeForce RTX 3070 XC3 ULTRA GAMING 8GB GDDR6X PCI Express 4.0 Graphics Card"
   }
 ]
