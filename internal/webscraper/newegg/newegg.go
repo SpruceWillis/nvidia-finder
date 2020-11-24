@@ -1,4 +1,4 @@
-package scraper
+package newegg
 
 import (
 	"encoding/json"
@@ -12,47 +12,80 @@ import (
 	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
-var items []inventory.Item
-
-func init() {
+func parseConfig() (NeweggConfig, error) {
+	var config NeweggConfig
 	rawConfig, err := ioutil.ReadFile("./src/github.com/sprucewillis/nvidia-finder/internal/webscraper/newegg_config.json")
 	if err != nil {
 		log.Println("error: unable to read Newegg card config file")
+		return NeweggConfig{}, err
 	}
-	err = json.Unmarshal(rawConfig, &items)
+	err = json.Unmarshal(rawConfig, &config)
 	if err != nil {
 		log.Println("error: unable to parse Newegg config from JSON")
+		return NeweggConfig{}, err
 	}
+	return config, nil
 }
 
 // CheckNewegg check newegg stock by individual card pages
-func CheckNewegg(client *http.Client, c chan inventory.Item) {
-	colorGreen := "\033[32m"
-	colorReset := "\033[0m"
-	numRetries := 1
+func CheckNewegg(client *http.Client, config NeweggConfig, c chan inventory.Item) {
+	items := config.items
+	searchPageUrls := config.searchPages
 	log.Printf("found %v cards to check at newegg", len(items))
+	if config.scrapeItemPages {
+		go checkIndividualItems(client, items, c)
+	}
+	if config.scrapeSearchPages {
+		go checkSearchPages(client, searchPageUrls, c)
+	}
+}
+
+func checkSearchPages(client *http.Client, searchPageUrls []string, c chan inventory.Item) {
 	for {
-		foundMatch := false
-		for _, card := range items {
-			status, err := checkItemStatusWithRetries(client, card.URL, numRetries)
+		scrambledUrls := util.ShuffleString(searchPageUrls)
+		for _, url := range scrambledUrls {
+			itemsInStock, err := checkNeweggSearchPage(client, url)
 			if err != nil {
-				log.Println("error: unable to parse data for newegg card", card.Name)
+				continue
+			}
+			for _, item := range itemsInStock {
+				c <- item
+			}
+		}
+	}
+}
+
+func checkNeweggSearchPage(client *http.Client, url string) ([]inventory.Item, error) {
+	// TODO pull newegg into its own package and separate overall, invididual, and search page scraping
+
+	return nil, nil
+}
+
+func checkIndividualItems(client *http.Client, items []inventory.Item, c chan inventory.Item) {
+	numRetries := 1
+	for {
+		scrambledItems := util.ShuffleItems(items)
+		for _, item := range scrambledItems {
+			status, err := checkItemStatusWithRetries(client, item.URL, numRetries)
+			if err != nil {
+				log.Println("error: unable to parse data for newegg item", item.Name)
 			}
 			if status {
-				log.Println(string(colorGreen), "Found in stock", card.Name, "at Newegg, url:", card.URL, string(colorReset))
-				card.Site = "newegg"
-				c <- card
-				foundMatch = true
+				logInStock(item)
+				item.Site = "newegg"
+				c <- item
 			} else {
-				log.Println(card.Name, "not in stock at Newegg")
+				log.Println(item.Name, "not in stock at Newegg")
 			}
-			util.RandomSleep(2, 5)
+			util.RandomSleep(1, 4)
 		}
-		if !foundMatch {
-			log.Println("nothing in stock at Newegg")
-		}
-		util.RandomSleep(10, 20)
 	}
+}
+
+func logInStock(item inventory.Item) {
+	colorGreen := "\033[32m"
+	colorReset := "\033[0m"
+	log.Println(string(colorGreen), "Found in stock", item.Name, "at Newegg, url:", item.URL, string(colorReset))
 }
 
 // retry so we can reduce the number of false positives
@@ -151,16 +184,4 @@ func parseItemStatus(resp *http.Response, url string) bool {
 		}
 	}
 	return false
-
-	// roughly the sequence on the page is:
-	// div class=page-content
-	// div class = page-section
-	// page-section-inner
-	// row is-product has-side-right has-side-items
-	// row-side
-	// product-buy-box
-	// product-buy
-	// nav-row
-	// nav-col - if there's a quantity box, things are for sure in stock
-	// otherwise we can recursively check for an add-to-cart button
 }
