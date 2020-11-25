@@ -30,7 +30,7 @@ func SetupAudioAlerts(c chan inventory.Item) error {
 	buffer.Append(streamer)
 	streamer.Close()
 	for range c {
-		ping := buffer.Streamer(0, buffer.Len()*2/3) // short enough to play in its entirety
+		ping := buffer.Streamer(0, buffer.Len()*2/3) // TODO limit to 1 sec
 		speaker.Play(ping)
 	}
 	return nil
