@@ -4,14 +4,15 @@ package main
 import (
 	"log"
 
-	"github.com/sprucewillis/nvidia-finder/internal/email"
-	scraper "github.com/sprucewillis/nvidia-finder/internal/webscraper"
+	"github.com/sprucewillis/nvidia-finder/internal/util/alerts"
+	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
 func main() {
-	c := make(chan scraper.Card)
-	go email.SetupAlerts(c)
-	card := scraper.Card{"https://youtu.be/eUuYgmWq9F4", "Shibe Card", "Doge"}
+	c := make(chan inventory.Item)
+	go alerts.SetupEmailAlerts(c)
+	card := inventory.Item{URL: "https://youtu.be/eUuYgmWq9F4", Name: "Shibe Card",
+		Site: "Youtube", PriceLimit: 0.0, Sku: "Doge"}
 	log.Println("card", card)
 	c <- card
 	for {
