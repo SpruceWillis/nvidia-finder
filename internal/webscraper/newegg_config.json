@@ -70,5 +70,21 @@
     {
       "url": "https://www.newegg.com/asus-geforce-rtx-3070-ko-rtx3070-o8g-gamin/p/N82E16814126466",
       "name": "ASUS GeForce RTX 3070 KO-RTX3070-O8G-GAMING 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/sapphire-radeon-rx-6800-xt-21304-01-20g/p/N82E16814202388",
+      "name": "SAPPHIRE Radeon RX 6800 XT DirectX 12 21304-01-20G 16GB 256-Bit GDDR6 PCI Express 4.0 x16 ATX Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-radeon-rx-6800-xt-rx6800xt-16g/p/N82E16814126472?&quicklink=true",
+      "name": "ASUS Radeon RX 6800 XT RX6800XT-16G 16GB 256-Bit GDDR6 PCI Express 4.0 Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asrock-radeon-rx-6800-xt-rx-6800-xt-16g/p/N82E16814930045",
+      "name": "ASRock Radeon RX 6800 XT Gaming Graphics Card with 16GB GDDR6 AMD RDNA 2"
+    },
+    {
+      "url": "https://www.newegg.com/sapphire-radeon-rx-6800-xt-11304-02-20g/p/N82E16814202391",
+      "name": "SAPPHIRE NITRO+ Radeon RX 6800 XT DirectX 12 11304-02-20G 16GB 256-Bit GDDR6 PCI Express 4.0 ATX Gaming Graphics Card, AMD RDNA 2"
     }
   ]
