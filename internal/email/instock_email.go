@@ -17,7 +17,7 @@ func inStockMessage(from, site, url string, to string) []byte {
 
 // SendInStockEmail email the selected folks about things being in stock
 func SendInStockEmail(site, productURL, smtpURL, from string, to []string, auth *smtp.Auth) error {
-	toCSV := recipientCSV(to)
+	toCSV := strings.Join(to, ",")
 	message := inStockMessage(from, site, productURL, toCSV)
 	err := smtp.SendMail(smtpURL, *auth, from, to, message)
 	if err != nil {
@@ -26,8 +26,4 @@ func SendInStockEmail(site, productURL, smtpURL, from string, to []string, auth 
 	}
 	log.Println("instock email(s) sent to indicated recipients")
 	return nil
-}
-
-func recipientCSV(recipients []string) string {
-	return strings.Join(recipients, ",")
 }

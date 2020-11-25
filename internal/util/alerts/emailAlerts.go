@@ -1,26 +1,28 @@
-package email
+package alerts
 
 import (
 	"bufio"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
+	"github.com/sprucewillis/nvidia-finder/internal/email"
 	"github.com/sprucewillis/nvidia-finder/internal/email/auth"
 	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
 // SetupAlerts read email configuration and send email alerts to the folks it is configured for
-func SetupAlerts(c chan inventory.Item) error {
+func SetupEmailAlerts(c chan inventory.Item) error {
 	// TODO do the auth stuff for the email, exit
 	creds := auth.GetSmtpCreds()
 	plainAuth := creds.GetPlainAuth()
 	from := creds.Username
 	to := GetEmailRecipients()
-	log.Println("email recipients:", recipientCSV(to))
+	log.Println("email recipients:", strings.Join(to, ","))
 	for itemInStock := range c {
 		if len(to) > 0 {
-			err := SendInStockEmail(itemInStock.Site, itemInStock.URL, creds.GetURL(), from, to, plainAuth)
+			err := email.SendInStockEmail(itemInStock.Site, itemInStock.URL, creds.GetURL(), from, to, plainAuth)
 			if err != nil {
 				fmt.Println("WARN: unable to send email", err)
 			}
