@@ -30,7 +30,6 @@ func CheckNewegg(client *http.Client, c chan inventory.Item) {
 	colorGreen := "\033[32m"
 	colorReset := "\033[0m"
 	numRetries := 1
-	// TODO: randomize time
 	log.Printf("found %v cards to check at newegg", len(items))
 	for {
 		foundMatch := false
