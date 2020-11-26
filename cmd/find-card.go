@@ -10,12 +10,14 @@ import (
 
 func main() {
 	client := &http.Client{}
-	alertChannel := make(chan inventory.Item)
-	go alerts.SetupEmailAlerts(alertChannel)
-	go alerts.SetupAudioAlerts(alertChannel)
+	emailAlertChannel := make(chan inventory.Item)
+	audioAlertChannel := make(chan inventory.Item)
+	go alerts.SetupEmailAlerts(emailAlertChannel)
+	go alerts.SetupAudioAlerts(audioAlertChannel)
+	alertChannel := alerts.SetUpAlertChannel([]chan inventory.Item{emailAlertChannel, audioAlertChannel})
 	go scraper.CheckBestBuy(client, false, alertChannel)
 	go scraper.CheckNewegg(client, alertChannel)
-	for {
-		// keep program alive
+	select {
+	// keep program alive
 	}
 }
