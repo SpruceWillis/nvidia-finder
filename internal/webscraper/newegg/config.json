@@ -1,0 +1,95 @@
+{
+  "scrapeItemPages": true,
+  "scrapeSearchPages": true,
+  "searchPages": [],
+  "items": [
+    {
+      "url": "https://www.newegg.com/msi-geforce-rtx-3080-rtx-3080-ventus-3x-10g-oc/p/N82E16814137598?Item=N82E16814137598",
+      "name": "MSI GeForce RTX 3080 DirectX 12 RTX 3080 VENTUS 3X 10G OC 10GB 320-Bit GDDR6X PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/evga-geforce-rtx-3080-10g-p5-3897-kr/p/N82E16814487518?Item=N82E16814487518",
+      "name": "EVGA GeForce RTX 3080 FTW3 ULTRA GAMING Video Card, 10G-P5-3897-KR, 10GB GDDR6X, iCX3 Technology, ARGB LED, Metal Backplate"
+    },
+    {
+      "url": "https://www.newegg.com/evga-geforce-rtx-3080-10g-p5-3881-kr/p/N82E16814487522?Item=N82E16814487522",
+      "name": "EVGA GeForce RTX 3080 XC3 BLACK GAMING Video Card, 10G-P5-3881-KR, 10GB GDDR6X, iCX3 Cooling, ARGB LED"
+    },
+    {
+      "url": "https://www.newegg.com/msi-geforce-rtx-3080-rtx-3080-gaming-x-trio-10g/p/N82E16814137597?Item=N82E16814137597",
+      "name": "MSI GeForce RTX 3080 DirectX 12 RTX 3080 GAMING X TRIO 10G 10GB 320-Bit GDDR6X PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3080-tuf-rtx3080-10g-gaming/p/N82E16814126453?Item=N82E16814126453",
+      "name": "ASUS TUF Gaming NVIDIA GeForce RTX 3080 TUF-RTX3080-10G-GAMING Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3080-tuf-rtx3080-o10g-gaming/p/N82E16814126452?Item=N82E16814126452",
+      "name": "ASUS TUF Gaming GeForce RTX 3080 TUF-RTX3080-O10G-GAMING Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/evga-geforce-rtx-3080-10g-p5-3883-kr/p/N82E16814487521?Item=N82E16814487521",
+      "name": "EVGA GeForce RTX 3080 XC3 GAMING Video Card, 10G-P5-3883-KR, 10GB GDDR6X, iCX3 Cooling, ARGB LED, Metal Backplate"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3080-rog-strix-rtx3080-o10g-gaming/p/N82E16814126457?Item=N82E16814126457",
+      "name": "ASUS ROG Strix GeForce RTX 3080 DirectX 12 ROG-STRIX-RTX3080-O10G-GAMING 10GB 320-Bit GDDR6X PCI Express 4.0 x16 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/gigabyte-geforce-rtx-3080-gv-n3080gaming-oc-10gd/p/N82E16814932329?Item=N82E16814932329",
+      "name": "GIGABYTE GeForce RTX 3080 DirectX 12 GV-N3080GAMING OC-10GD 10GB 320-Bit GDDR6X PCI Express 4.0 x16 ATX Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/msi-geforce-rtx-3080-rtx-3080-ventus-3x-10g/p/N82E16814137600?Item=N82E16814137600",
+      "name": "MSI GeForce RTX 3080 DirectX 12 RTX 3080 VENTUS 3X 10G 10GB 320-Bit GDDR6X PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/gigabyte-geforce-rtx-3080-gv-n3080eagle-oc-10gd/p/N82E16814932330?Item=N82E16814932330",
+      "name": "GIGABYTE GeForce RTX 3080 DirectX 12 GV-N3080EAGLE OC-10GD 10GB 320-Bit GDDR6X PCI Express 4.0 x16 ATX Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/evga-geforce-rtx-3080-10g-p5-3897-kr/p/N82E16814487518?Item=N82E16814487518",
+      "name": "EVGA GeForce RTX 3080 FTW3 ULTRA GAMING Video Card, 10G-P5-3897-KR, 10GB GDDR6X, iCX3 Technology, ARGB LED, Metal Backplate"
+    },
+    {
+      "url": "https://www.newegg.com/gigabyte-geforce-rtx-3080-gv-n3080aorus-m-10gd/p/N82E16814932336?Item=N82E16814932336",
+      "name": "GIGABYTE AORUS GeForce RTX 3080 DirectX 12 GV-N3080AORUS M-10GD 10GB 320-Bit GDDR6X PCI Express 4.0 x16 ATX Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/gigabyte-geforce-rtx-3080-gv-n3080vision-oc-10gd/p/N82E16814932337?Item=N82E16814932337",
+      "name": "GIGABYTE GeForce RTX 3080 DirectX 12 GV-N3080VISION OC-10GD 10GB 320-Bit GDDR6X PCI Express 4.0 x16 ATX Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3070-rog-strix-rtx3070-o8g-gaming/p/N82E16814126458",
+      "name": "ASUS ROG Strix GeForce RTX 3070 DirectX 12 ROG-STRIX-RTX3070-O8G-GAMING 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "name": "MSI GeForce RTX 3070 DirectX 12 RTX 3070 VENTUS 2X OC 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card",
+      "url": "https://www.newegg.com/msi-geforce-rtx-3070-rtx-3070-ventus-2x-oc/p/N82E16814137602"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3080-rog-strix-rtx3080-10g-gaming/p/N82E16814126469?Item=N82E16814126469",
+      "name": "ASUS ROG Strix GeForce RTX 3080 DirectX 12 ROG-STRIX-RTX3080-10G-GAMING 10GB 320-Bit GDDR6X PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-geforce-rtx-3070-ko-rtx3070-o8g-gamin/p/N82E16814126466",
+      "name": "ASUS GeForce RTX 3070 KO-RTX3070-O8G-GAMING 8GB 256-Bit GDDR6 PCI Express 4.0 HDCP Ready Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/sapphire-radeon-rx-6800-xt-21304-01-20g/p/N82E16814202388",
+      "name": "SAPPHIRE Radeon RX 6800 XT DirectX 12 21304-01-20G 16GB 256-Bit GDDR6 PCI Express 4.0 x16 ATX Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asus-radeon-rx-6800-xt-rx6800xt-16g/p/N82E16814126472?&quicklink=true",
+      "name": "ASUS Radeon RX 6800 XT RX6800XT-16G 16GB 256-Bit GDDR6 PCI Express 4.0 Video Card"
+    },
+    {
+      "url": "https://www.newegg.com/asrock-radeon-rx-6800-xt-rx-6800-xt-16g/p/N82E16814930045",
+      "name": "ASRock Radeon RX 6800 XT Gaming Graphics Card with 16GB GDDR6 AMD RDNA 2"
+    },
+    {
+      "url": "https://www.newegg.com/sapphire-radeon-rx-6800-xt-11304-02-20g/p/N82E16814202391",
+      "name": "SAPPHIRE NITRO+ Radeon RX 6800 XT DirectX 12 11304-02-20G 16GB 256-Bit GDDR6 PCI Express 4.0 ATX Gaming Graphics Card, AMD RDNA 2"
+    }
+  ]
+}
