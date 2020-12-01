@@ -11,16 +11,21 @@ import (
 
 func main() {
 	client := &http.Client{}
+	// email
 	emailAlertChannel := make(chan inventory.Item)
-	audioAlertChannel := make(chan inventory.Item)
 	go alerts.SetupEmailAlerts(emailAlertChannel)
+
+	// audio
+	audioAlertChannel := make(chan inventory.Item)
 	go alerts.SetupAudioAlerts(audioAlertChannel)
+
+	// overall alerts
 	alertChannel := alerts.SetUpAlertChannel([]chan inventory.Item{emailAlertChannel, audioAlertChannel})
-	go scraper.CheckBestBuy(client, false, alertChannel)
 	neweggConfig, err := newegg.ReadNeweggConfig()
 	if err == nil {
 		go newegg.CheckNewegg(client, neweggConfig, alertChannel)
 	}
+	go scraper.CheckBestBuy(client, false, alertChannel)
 	select {
 	// keep program alive
 	}

@@ -12,35 +12,40 @@ func PrettyPrintHTMLNode(node *html.Node, depth int) {
 		return
 	}
 	fmt.Println("node:", node)
+	var nodeType string
 	switch node.Type {
 	case html.ErrorNode:
-		fmt.Println("error node")
+		nodeType = "error node"
 	case html.TextNode:
-		fmt.Println("text node")
+		nodeType = "text node"
 	case html.DocumentNode:
-		fmt.Println("document node")
+		nodeType = "document node"
 	case html.ElementNode:
-		fmt.Println("document node")
+		nodeType = "element node"
 	case html.CommentNode:
-		fmt.Println("comment node")
+		nodeType = "comment node"
 	case html.DoctypeNode:
-		fmt.Println("doctype node")
+		nodeType = "doctype node"
 	case html.RawNode:
-		fmt.Println("raw node")
+		nodeType = "raw node"
 	}
+	fmt.Println("node type:", nodeType)
+	fmt.Println("data:", node.Data)
+	fmt.Println("namespace:", node.Namespace)
+	fmt.Println("attributes:", node.Attr)
 	numSiblings, numChildren := 0, 0
 	sibling := node.NextSibling
 	for sibling != nil {
 		numSiblings++
 		sibling = sibling.NextSibling
 	}
-	fmt.Printf("node has %v siblings", numSiblings)
+	fmt.Println(fmt.Sprintf("node has %v siblings", numSiblings))
 	child := node.FirstChild
 	for child != nil {
 		numChildren++
 		child = child.NextSibling
 	}
-	fmt.Printf("node has %v children", numChildren)
+	fmt.Println(fmt.Sprintf("node has %v children", numChildren))
 	if depth > 1 {
 		child = node.FirstChild
 		for child != nil {

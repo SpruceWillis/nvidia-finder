@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/sprucewillis/nvidia-finder/internal/util"
 	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
@@ -57,11 +58,14 @@ func checkSearchPages(client *http.Client, searchPageUrls []string, c chan inven
 				c <- item
 			}
 		}
+		util.RandomSleep(8, 12)
 	}
 }
 
 func checkIndividualItems(client *http.Client, items []inventory.Item, c chan inventory.Item) {
-	numRetries := 1
+	alertCooldown, _ := time.ParseDuration("3min")
+	numRetries := 0
+	itemFoundCache := make(map[string]bool)
 	for {
 		scrambledItems := util.ShuffleItems(items)
 		for _, item := range scrambledItems {
@@ -71,12 +75,19 @@ func checkIndividualItems(client *http.Client, items []inventory.Item, c chan in
 			}
 			if status {
 				logInStock(item)
-				item.Site = "newegg"
-				c <- item
+				_, foundInCache := itemFoundCache[item.URL]
+				if !foundInCache {
+					item.Site = "newegg"
+					c <- item
+					itemFoundCache[item.URL] = true
+					time.AfterFunc(alertCooldown, func() {
+						delete(itemFoundCache, item.URL)
+					})
+				}
 			} else {
 				log.Println(item.Name, "not in stock at Newegg")
 			}
-			util.RandomSleep(1, 4)
+			util.RandomSleep(10, 12)
 		}
 	}
 }

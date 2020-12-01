@@ -1,4 +1,4 @@
-module github.com/sprucewillis/nvidia-finder/internal/util/html_utils
+module github.com/sprucewillis/nvidia-finder/internal/util/htmlutils
 
 go 1.15
 
