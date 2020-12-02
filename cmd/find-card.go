@@ -11,16 +11,20 @@ import (
 
 func main() {
 	client := &http.Client{}
+	var alertChannels []chan inventory.Item
+
 	// email
 	emailAlertChannel := make(chan inventory.Item)
 	go alerts.SetupEmailAlerts(emailAlertChannel)
+	alertChannels = append(alertChannels, emailAlertChannel)
 
 	// audio
 	audioAlertChannel := make(chan inventory.Item)
 	go alerts.SetupAudioAlerts(audioAlertChannel)
+	alertChannels = append(alertChannels, audioAlertChannel)
 
 	// overall alerts
-	alertChannel := alerts.SetUpAlertChannel([]chan inventory.Item{emailAlertChannel, audioAlertChannel})
+	alertChannel := alerts.SetUpAlertChannel(alertChannels)
 	neweggConfig, err := newegg.ReadNeweggConfig()
 	if err == nil {
 		go newegg.CheckNewegg(client, neweggConfig, alertChannel)
