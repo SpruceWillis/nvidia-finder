@@ -11,5 +11,5 @@ type Item struct {
 
 // IsBelowPriceLimit (price float64) determine whether the available price is ok or not
 func (i Item) IsBelowPriceLimit(price float64) bool {
-	return price <= i.PriceLimit
+	return i.PriceLimit <= 0 || price <= i.PriceLimit
 }

@@ -69,7 +69,7 @@ func checkIndividualItems(client *http.Client, items []inventory.Item, c chan in
 	for {
 		scrambledItems := util.ShuffleItems(items)
 		for _, item := range scrambledItems {
-			status, err := checkIndividualItemWithRetries(client, item.URL, numRetries)
+			status, err := checkIndividualItemWithRetries(client, item, numRetries)
 			if err != nil {
 				log.Println("error: unable to parse data for newegg item", item.Name)
 			}
