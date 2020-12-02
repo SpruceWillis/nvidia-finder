@@ -29,15 +29,20 @@ func PrettyPrintHTMLNode(node *html.Node, depth int) {
 	case html.RawNode:
 		nodeType = "raw node"
 	}
+	fmt.Println("dataAtom:", node.DataAtom)
 	fmt.Println("node type:", nodeType)
 	fmt.Println("data:", node.Data)
 	fmt.Println("namespace:", node.Namespace)
 	fmt.Println("attributes:", node.Attr)
 	numSiblings, numChildren := 0, 0
-	sibling := node.NextSibling
-	for sibling != nil {
-		numSiblings++
-		sibling = sibling.NextSibling
+	parent := node.Parent
+	if parent != nil {
+		sibling := parent.FirstChild
+		for sibling != nil {
+			numSiblings++
+			sibling = sibling.NextSibling
+		}
+		numSiblings-- // do not count the node itself as a sibling
 	}
 	fmt.Println(fmt.Sprintf("node has %v siblings", numSiblings))
 	child := node.FirstChild
