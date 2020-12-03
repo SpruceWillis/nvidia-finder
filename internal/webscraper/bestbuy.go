@@ -269,5 +269,5 @@ func parseHTMLForStatus(sku string, resp *http.Response) bool {
 }
 
 func isAvailable(node *html.Node) bool {
-	return strings.Contains(node.Data, "ADD_TO_CART")
+	return strings.Contains(node.Data, "ADD_TO_CART") || strings.Contains(node.Data, "Find a Store")
 }
