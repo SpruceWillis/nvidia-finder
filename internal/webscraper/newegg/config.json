@@ -1,7 +1,11 @@
 {
   "scrapeItemPages": true,
   "scrapeSearchPages": true,
-  "searchPages": [],
+  "searchPages": [
+    "https://www.newegg.com/p/pl?d=rtx+3080&N=100007709&isdeptsrh=1&LeftPriceRange=700+",
+    "https://www.newegg.com/p/pl?d=rtx+3070&N=100007709&isdeptsrh=1&LeftPriceRange=500+720",
+    "https://www.newegg.com/p/pl?d=6800xt&N=100007709&isdeptsrh=1"
+  ],
   "items": [
     {
       "url": "https://www.newegg.com/msi-geforce-rtx-3080-rtx-3080-ventus-3x-10g-oc/p/N82E16814137598?Item=N82E16814137598",

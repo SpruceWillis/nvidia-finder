@@ -13,12 +13,13 @@ import (
 	"golang.org/x/net/html"
 
 	"github.com/sprucewillis/nvidia-finder/internal/util"
+	"github.com/sprucewillis/nvidia-finder/internal/webscraper/headers"
 	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 )
 
 var bestBuyItems []inventory.Item
 
-// CheckBestBuy(*http.Client, bool, chan inventory.Item) check best buy client and send notifications to email channel
+// CheckBestBuy check best buy client and send notifications to email channel
 func CheckBestBuy(client *http.Client, findSkusFromWeb bool, c chan inventory.Item) {
 	for {
 		checkBestBuyStatuses(client, findSkusFromWeb, c)
@@ -80,7 +81,7 @@ func getSkusFromWeb(client *http.Client) []inventory.Item {
 		log.Println(err)
 		return nil
 	}
-	for k, v := range bestBuyHeaders() {
+	for k, v := range headers.MacHeaders {
 		req.Header.Add(k, v)
 	}
 	resp, err := client.Do(req)
@@ -105,15 +106,6 @@ func getSkusFromWeb(client *http.Client) []inventory.Item {
 		items[i] = inventory.Item{URL: "", Name: "", Site: "Best Buy", PriceLimit: 0.0, Sku: sku}
 	}
 	return items
-}
-
-func bestBuyHeaders() map[string]string {
-	return map[string]string{
-		"User-Agent":      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0",
-		"Accept":          "*/*",
-		"Accept-Language": "en-Us,en;q=0.5",
-		"DNT":             "1",
-	}
 }
 
 /**
@@ -213,7 +205,7 @@ func getItemStatus(item inventory.Item, client *http.Client) bool {
 	if err != nil {
 		return false
 	}
-	for k, v := range bestBuyHeaders() {
+	for k, v := range headers.MacHeaders {
 		req.Header.Add(k, v)
 	}
 	resp, err := client.Do(req)

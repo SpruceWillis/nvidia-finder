@@ -8,7 +8,7 @@ import (
 
 // PrettyPrintHTMLNode print useful information about the node and its children to a given depth
 func PrettyPrintHTMLNode(node *html.Node, depth int) {
-	if depth <= 0 {
+	if depth <= 0 || node == nil {
 		return
 	}
 	fmt.Println("node:", node)

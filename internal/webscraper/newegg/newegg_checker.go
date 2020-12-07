@@ -57,8 +57,9 @@ func checkSearchPages(client *http.Client, searchPageUrls []string, c chan inven
 			for _, item := range itemsInStock {
 				c <- item
 			}
+			util.RandomSleep(3, 5)
 		}
-		util.RandomSleep(8, 12)
+		util.RandomSleep(25, 30)
 	}
 }
 
@@ -87,7 +88,7 @@ func checkIndividualItems(client *http.Client, items []inventory.Item, c chan in
 			} else {
 				log.Println(item.Name, "not in stock at Newegg")
 			}
-			util.RandomSleep(10, 12)
+			util.RandomSleep(8, 10)
 		}
 	}
 }

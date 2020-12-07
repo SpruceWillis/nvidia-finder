@@ -1,8 +1,12 @@
 github.com/sprucewillis/nvidia-finder v0.0.0-20201116054742-a92e0a79f6f3 h1:ZRcqnP00OM62DGX+kd9BBnwXiu4QzfmSTR6ml6X/dLs=
 github.com/sprucewillis/nvidia-finder v0.0.0-20201116054742-a92e0a79f6f3/go.mod h1:mIShaEYIvqNz2pbz43XZ95rSC3yL/3Z89U066fZpHIs=
 github.com/sprucewillis/nvidia-finder v0.0.0-20201126032723-990c2a96a21c h1:rkZpIqea7uhzq+TuH1PepP1jWZtxL56RX2a72+hVT48=
+github.com/sprucewillis/nvidia-finder v0.0.0-20201203064848-3b346d095de1 h1:M42C2iDGW38XUf/fEYMufI+mlz8BvpQOmhuWoh681NU=
 github.com/sprucewillis/nvidia-finder/internal/util v0.0.0-20201126032723-990c2a96a21c h1:5xtLr3lO1gAHyFI2QdRiDeDHjVhgSou6Gug9O0d3UMQ=
 github.com/sprucewillis/nvidia-finder/internal/util v0.0.0-20201126032723-990c2a96a21c/go.mod h1:S7QjdRi9AJaxNKs56Yfhet6YI/J5ZEzEc1EasbiU8NQ=
+github.com/sprucewillis/nvidia-finder/internal/util v0.0.0-20201203064848-3b346d095de1 h1:81n8lI3Qrco2tdhx3SeU97DehtHPr3/6RO6Abd0owbs=
+github.com/sprucewillis/nvidia-finder/internal/util/htmlutils v0.0.0-20201203064848-3b346d095de1 h1:edXy765MXwu1AGG/QMruFd0FqbZJH+5RzEV9gTAYLI8=
+github.com/sprucewillis/nvidia-finder/internal/util/htmlutils v0.0.0-20201203064848-3b346d095de1/go.mod h1:nGCLvHIKt0vJSNryxeGiCLsDFfAyGfNEuyEBbpbq2E4=
 github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory v0.0.0-20201126032723-990c2a96a21c h1:5aPiy2DTLHDkJyLPWO9CmDPyB7jZVbQbpKQCeZLjahw=
 github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory v0.0.0-20201126032723-990c2a96a21c/go.mod h1:SJAXUXe/qepKYb50HF8DY/KL5NXtpnX/rs1r5/zKktg=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
