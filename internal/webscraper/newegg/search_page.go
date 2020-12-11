@@ -2,12 +2,12 @@ package newegg
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/sprucewillis/nvidia-finder/internal/util/htmlutils"
-	"github.com/sprucewillis/nvidia-finder/internal/webscraper/headers"
 	"github.com/sprucewillis/nvidia-finder/internal/webscraper/inventory"
 	"golang.org/x/net/html"
 )
@@ -20,11 +20,13 @@ func checkNeweggSearchPage(client *http.Client, url string) ([]inventory.Item, e
 	if len(itemsInStock) == 0 {
 		log.Println("nothing in stock at", url)
 	} else {
-		itemNames := make([]string, 0)
+		log.Println("in-stock items found at", url)
+		itemInfos := make([]string, 0)
 		for _, item := range itemsInStock {
-			itemNames = append(itemNames, item.Name)
+			itemInfo := fmt.Sprintf("item: %v, url: %v", item.Name, item.URL)
+			itemInfos = append(itemInfos, itemInfo)
 		}
-		log.Println("in-stock items found at", url, strings.Join(itemNames, "\n"))
+		log.Println(strings.Join(itemInfos, "\n"))
 	}
 	return itemsInStock, err
 }
@@ -36,9 +38,6 @@ func getSearchPageItems(client *http.Client, url string) ([]inventory.Item, erro
 	if err != nil {
 		log.Println("unable to create HTTP request:", err)
 		return nil, err
-	}
-	for k, v := range headers.MacHeaders {
-		req.Header.Add(k, v)
 	}
 	// TODO figure out why this is bugged and sometimes has an unexpected EOF
 	resp, err := client.Do(req)
